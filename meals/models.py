@@ -16,7 +16,7 @@ class Restaurant(models.Model):
 
 class Meal(models.Model):
     name = models.TextField()
-    price = models.TextField
+    price = models.TextField()
     TYPES = (('BR', 'breakfast'), ('LU', 'lunch'), ('DN', 'dinner'))
     type = models.CharField(max_length=2, choices=TYPES, blank=True)
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)

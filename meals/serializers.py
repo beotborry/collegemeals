@@ -12,7 +12,7 @@ class MealSerializer(serializers.ModelSerializer):
     score_count = serializers.SerializerMethodField()
     class Meta:
         model = Meal
-        fields = ('id', 'name', 'restaurant', 'score', 'score_count')
+        fields = ('id', 'name', 'restaurant', 'score', 'score_count', 'type', 'price')
     def get_score(self, meal):
         return Review.objects.filter(meal=meal).aggregate(Avg('score'))
     def get_score_count(self, meal):
