@@ -1,6 +1,6 @@
 from django.db.models import Avg
 from rest_framework import serializers
-from .models import College, Restaurant, Meal, Review
+from .models import College, Restaurant, Meal, Review, Menu
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,10 +19,9 @@ class MealSerializer(serializers.ModelSerializer):
         return Review.objects.filter(meal=meal).count()
 
 class RestaurantSerializer(serializers.ModelSerializer):
-    meal = MealSerializer(many=True)
     class Meta:
         model = Restaurant
-        fields = ('id', 'name', 'meal')
+        fields = ('id', 'name')
 
 class CollegeSerializer(serializers.ModelSerializer):
     restaurant = RestaurantSerializer(many=True)
@@ -30,7 +29,10 @@ class CollegeSerializer(serializers.ModelSerializer):
         model = College
         field = ('id', 'name', 'restaurant')
 
-
-
-
+class MenuSerializer(serializers.ModelSerializer):
+    restaurant = RestaurantSerializer()
+    meals = MealSerializer(many=True)
+    class Meta:
+        model = Menu
+        fields = '__all__'
 
