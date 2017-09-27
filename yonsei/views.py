@@ -16,7 +16,7 @@ HANKYUNG_RESTAURANTS = ["한경관(교직원식당)"]
 def menu(request):
     today = timezone.localtime(timezone.now()).date()
     tomorrow = (timezone.localtime(timezone.now()).today() + timedelta(days=1)).date()
-    menu_data = { "today": { "date": today.__str__(), "menus": [] }, "tomorrow": { "data": tomorrow.__str__(), "menus": [] } }
+    menu_data = { "today": { "date": today.__str__(), "menus": [] }, "tomorrow": { "date": tomorrow.__str__(), "menus": [] } }
     for restaurant_name in KUKJE_RESTAURANTS:
         restaurant = Restaurant.objects.get(name=restaurant_name)
         today_menu = Menu.objects.get(restaurant=restaurant, date=today)
