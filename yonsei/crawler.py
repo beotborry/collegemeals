@@ -18,7 +18,6 @@ def dates_handler(dates, restaurant_name):
 def meal_handler(type, meals, prices, dates, restaurant_name):
     restaurant = Restaurant.objects.get(name=restaurant_name)
     for index, meal_names in enumerate(meals):
-        is_here = False
         if not meal_names:
             continue
         if isinstance(meal_names, list):

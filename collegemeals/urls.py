@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^api/v1/', include('meals.urls')),
     url(r'^api/v1/yonsei/', include('yonsei.urls')),
+    url(r'^api/v1/snu/', include('snu.urls')),
 ]

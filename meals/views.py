@@ -14,7 +14,7 @@ def menu(request, college_id):
 @api_view(['POST'])
 def review(request, college_id, meal_id):
     college = College.objects.get(pk=college_id)
-    score = request.data.get('score', '')
+    score = request.data.get('score')
     if not score:
         return Response(data={'message': 'Missing fields.'}, status=status.HTTP_400_BAD_REQUEST)
     Review.objects.create(meal_id=meal_id, score=score)

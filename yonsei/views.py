@@ -24,5 +24,3 @@ def menu(request):
         tomorrow_menu = Menu.objects.get(restaurant=restaurant, date=tomorrow)
         menu_data["tomorrow"]["menus"].append(MenuSerializer(tomorrow_menu).data)
     return Response(data=menu_data)
-
-
