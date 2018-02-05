@@ -103,8 +103,7 @@ def crawl_graduate_dorm_restaurant():
             return 2
         elif row_count == 5 or row_count == 6 or row_count == 7:
             return 3
-
-    # date만 해결하면 됨
+        
     for tr in trs:
         for td in trs[row_count].find_all('td'):
             if not td.li:
