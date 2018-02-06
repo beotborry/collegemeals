@@ -58,7 +58,7 @@ def crawl_vet_restaurant():
             continue
         elif count == 1:
             lunch = content
-            if lunch == " " or lunch == '\t' or lunch is None:
+            if lunch == ' ':
                 count += 1
                 continue
             meal_handler(type = type_handler['중식'], meal_name = lunch, price = 'etc', date = date, restaurant_name = current_restaurant)
@@ -66,8 +66,8 @@ def crawl_vet_restaurant():
             continue
         elif count == 2:
             dinner = content
-            if dinner == " " or dinner == '\t' or dinner is None:
-                count += 1
+            if dinner == ' ':
+                count = 0
                 continue
             meal_handler(type = type_handler['석식'], meal_name = dinner, price = 'etc', date = date, restaurant_name = current_restaurant)
             count = 0
@@ -103,7 +103,7 @@ def crawl_graduate_dorm_restaurant():
             return 2
         elif row_count == 5 or row_count == 6 or row_count == 7:
             return 3
-        
+
     for tr in trs:
         for td in trs[row_count].find_all('td'):
             if not td.li:
