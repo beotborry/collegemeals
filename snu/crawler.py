@@ -22,6 +22,8 @@ def graduate_dorm_get_date(date):
 def crawl():
     crawl_graduate_dorm_restaurant()
     crawl_vet_restaurant()
+    crawl_snuco_direct_restaurant()
+    crawl_snuco_commission_restaurant()
 
 def dates_handler(date, restaurant_name):
     restaurant = Restaurant.objects.get(name = restaurant_name)
@@ -116,3 +118,119 @@ def crawl_graduate_dorm_restaurant():
 
         if row_count == 8:
             break
+
+def crawl_snuco_direct_restaurant():
+    #채식메뉴랑 (#) & / (보충설명) 보완
+
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0'}
+
+    url_origin = 'http://www.snuco.com/html/restaurant/restaurant_menu1.asp'
+    url_date = ''
+
+    page = requests.get(url= url_origin, headers=headers)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    soup.div.extract()
+
+    current_restaurant = ''
+    restaurant_handler = {1: '학생회관 식당', 2: '농생대 3식당', 3: '919동 기숙사 식당', 4: '자하연 식당', 5: '302동 식당', 6: '동원관 식당', 7: '감골 식당'}
+    type_handler = {'조식': 'BR', '중식': 'LU', '석식': 'DN'}
+    price_handler = {'ⓐ' : 2500, 'ⓑ' : 3000, 'ⓒ': 3500, 'ⓓ': 4000, 'ⓔ': 4500, 'ⓕ': 5000, 'ⓖ': 'etc', 'ⓙ' : 6000}
+
+    a_tags = soup.find_all('a')
+    trs = soup.find_all('tr')
+    tr_count = 0
+
+    for tr in trs:
+        tr_count += 1
+        if tr_count >= 20 and tr_count <= 26:
+            current_restaurant = restaurant_handler[tr_count - 19]
+
+            for a in a_tags:
+                if a.attrs['href']:
+                    if a.attrs['href'][0] == '?':
+                        date = a.attrs['href'][6:16]
+                        dates_handler(date=date, restaurant_name=current_restaurant)
+                        url_date = url_origin + str('?date=') + str(date)
+
+                        page_date = requests.get(url=url_date, headers=headers)
+                        soup_date = BeautifulSoup(page_date.content, 'html.parser')
+                        soup_date.div.extract()
+
+                        tr_date_count = 0
+                        trs_date = soup_date.find_all('tr')
+                        for tr_date in trs_date:
+                            tr_date_count += 1
+                            if tr_date_count == tr_count + 1:
+                                tds_date = tr_date.find_all('td')
+                                for menu in re.compile('ⓐ\w+|ⓑ\w+|ⓒ\w+|ⓓ\w+|ⓔ\w+|ⓕ\w+|ⓖ\w+|ⓙ\w+').findall(tds_date[2].text):
+                                    if not menu == ' ':
+                                        meal_handler(type=type_handler['조식'], meal_name=menu[1:], price=price_handler[menu[0]], date=date, restaurant_name=current_restaurant)
+
+                                for menu in re.compile('ⓐ\w+|ⓑ\w+|ⓒ\w+|ⓓ\w+|ⓔ\w+|ⓕ\w+|ⓖ\w+|ⓙ\w+').findall(tds_date[4].text):
+                                    if not menu == ' ':
+                                        meal_handler(type=type_handler['중식'], meal_name=menu[1:], price=price_handler[menu[0]], date=date, restaurant_name=current_restaurant)
+
+                                for menu in re.compile('ⓐ\w+|ⓑ\w+|ⓒ\w+|ⓓ\w+|ⓔ\w+|ⓕ\w+|ⓖ\w+|ⓙ\w+').findall(tds_date[6].text):
+                                    if not menu == ' ':
+                                        meal_handler(type=type_handler['석식'], meal_name=menu[1:], price=price_handler[menu[0]], date=date, restaurant_name=current_restaurant)
+
+def crawl_snuco_commission_restaurant():
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0'}
+
+    url_origin = 'http://www.snuco.com/html/restaurant/restaurant_menu2.asp'
+    url_date = ''
+
+    page = requests.get(url=url_origin, headers=headers)
+    soup = BeautifulSoup(page.content, 'html.parser')
+    soup.div.extract()
+
+    current_restaurant = ''
+    restaurant_handler = {1: '사범대 4식당', 2: '두레미담', 3: '301동 식당', 4: '예술계복합연구동 식당', 5: '샤반', 6: '공대간이식당',
+                          7: '소담마루', 8: '220동 식당'}
+    type_handler = {'조식': 'BR', '중식': 'LU', '석식': 'DN'}
+    price_handler = {'ⓐ': 1700, 'ⓑ': 2000, 'ⓒ': 2500, 'ⓓ': 3000, 'ⓔ': 3500, 'ⓕ': 4000, 'ⓖ': 4500, 'ⓗ' : 5000, 'ⓘ' : 5500, 'ⓙ': 6000}
+
+    a_tags = soup.find_all('a')
+    trs = soup.find_all('tr')
+    tr_count = 0
+
+    for tr in trs:
+        tr_count += 1
+        if tr_count >= 21 and tr_count <= 28:
+            current_restaurant = restaurant_handler[tr_count - 20]
+
+            for a in a_tags:
+                if a.attrs['href']:
+                    if a.attrs['href'][0] == '?':
+                        date = a.attrs['href'][6:16]
+                        dates_handler(date=date, restaurant_name=current_restaurant)
+                        url_date = url_origin + str('?date=') + str(date)
+
+                        page_date = requests.get(url=url_date, headers=headers)
+                        soup_date = BeautifulSoup(page_date.content, 'html.parser')
+                        soup_date.div.extract()
+
+                        tr_date_count = 0
+                        trs_date = soup_date.find_all('tr')
+                        for tr_date in trs_date:
+                            tr_date_count += 1
+                            if tr_date_count == tr_count:
+                                tds_date = tr_date.find_all('td')
+                                for menu in re.compile('ⓐ\w+|ⓑ\w+|ⓒ\w+|ⓓ\w+|ⓔ\w+|ⓕ\w+|ⓖ\w+|ⓗ\w+|ⓘ\w+|ⓙ\w+').findall(tds_date[2].text):
+                                    if not menu == ' ':
+                                        meal_handler(type=type_handler['조식'], meal_name=menu[1:],
+                                                     price=price_handler[menu[0]], date=date,
+                                                     restaurant_name=current_restaurant)
+
+                                for menu in re.compile('ⓐ\w+|ⓑ\w+|ⓒ\w+|ⓓ\w+|ⓔ\w+|ⓕ\w+|ⓖ\w+|ⓗ\w+|ⓘ\w+|ⓙ\w+').findall(tds_date[4].text):
+                                    if not menu == ' ':
+                                        meal_handler(type=type_handler['중식'], meal_name=menu[1:],
+                                                     price=price_handler[menu[0]], date=date,
+                                                     restaurant_name=current_restaurant)
+
+                                for menu in re.compile('ⓐ\w+|ⓑ\w+|ⓒ\w+|ⓓ\w+|ⓔ\w+|ⓕ\w+|ⓖ\w+|ⓗ\w+|ⓘ\w+|ⓙ\w+').findall(tds_date[6].text):
+                                    if not menu == ' ':
+                                        meal_handler(type=type_handler['석식'], meal_name=menu[1:],
+                                                     price=price_handler[menu[0]], date=date,
+                                                     restaurant_name=current_restaurant)
+
