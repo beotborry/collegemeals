@@ -111,7 +111,7 @@ def crawl_graduate_dorm_restaurant():
             if not td.li:
                 continue
             column_count += 1
-            meal_handler(type=type_handler[type_determine(row_count=row_count)], meal_name=td.text, price=price_handler[td.li.attrs['class'][0]], date=graduate_dorm_get_date(ths[column_count].text), restaurant_name= current_restaurant)
+            meal_handler(type=type_handler[type_determine(row_count=row_count)], meal_name=td.text.replace('\n',''), price=price_handler[td.li.attrs['class'][0]], date=graduate_dorm_get_date(ths[column_count].text), restaurant_name= current_restaurant)
 
         row_count += 1
         column_count = 0
