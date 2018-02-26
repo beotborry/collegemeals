@@ -162,17 +162,33 @@ def crawl_snuco_direct_restaurant():
                             tr_date_count += 1
                             if tr_date_count == tr_count + 1:
                                 tds_date = tr_date.find_all('td')
-                                for menu in re.split('.(?=[ⓐ-ⓙ])', tds_date[2].text.replace('\n','')):
-                                    if not menu == ' ':
-                                        meal_handler(type=type_handler['조식'], meal_name=menu[1:], price=price_handler[menu[0]], date=date, restaurant_name=current_restaurant)
 
-                                for menu in re.split('.(?=[ⓐ-ⓙ])', tds_date[4].text.replace('\n','')):
-                                    if not menu == ' ':
-                                        meal_handler(type=type_handler['중식'], meal_name=menu[1:], price=price_handler[menu[0]], date=date, restaurant_name=current_restaurant)
+                                first_br = re.split('.(?=[ⓐ-ⓙ])', tds_date[2].text.replace('\n', ''))
+                                second_br = re.compile('.(?=[ⓐ-ⓙ])').findall(tds_date[2].text.replace('\n', ''))
+                                second_br.append('')
+                                third_br = [first_br[i] + second_br[i].replace('/','') for i in range(len(first_br))]
 
-                                for menu in re.split('.(?=[ⓐ-ⓙ])', tds_date[6].text.replace('\n','')):
+                                for menu in third_br:
                                     if not menu == ' ':
-                                        meal_handler(type=type_handler['석식'], meal_name=menu[1:], price=price_handler[menu[0]], date=date, restaurant_name=current_restaurant)
+                                        meal_handler(type=type_handler['조식'], meal_name=menu[1:].replace(' ',''), price=price_handler[menu[0]], date=date, restaurant_name=current_restaurant)
+
+                                first_lu = re.split('.(?=[ⓐ-ⓙ])', tds_date[4].text.replace('\n', ''))
+                                second_lu = re.compile('.(?=[ⓐ-ⓙ])').findall(tds_date[4].text.replace('\n', ''))
+                                second_lu.append('')
+                                third_lu = [first_lu[i] + second_lu[i].replace('/','') for i in range(len(first_lu))]
+
+                                for menu in third_lu:
+                                    if not menu == ' ':
+                                        meal_handler(type=type_handler['중식'], meal_name=menu[1:].replace(' ',''), price=price_handler[menu[0]], date=date, restaurant_name=current_restaurant)
+
+                                first_dn = re.split('.(?=[ⓐ-ⓙ])', tds_date[6].text.replace('\n', ''))
+                                second_dn = re.compile('.(?=[ⓐ-ⓙ])').findall(tds_date[6].text.replace('\n', ''))
+                                second_dn.append('')
+                                third_dn = [first_dn[i] + second_dn[i].replace('/', '') for i in range(len(first_dn))]
+
+                                for menu in third_dn:
+                                    if not menu == ' ':
+                                        meal_handler(type=type_handler['석식'], meal_name=menu[1:].replace(' ',''), price=price_handler[menu[0]], date=date, restaurant_name=current_restaurant)
 
 def crawl_snuco_commission_restaurant():
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0'}
@@ -216,28 +232,46 @@ def crawl_snuco_commission_restaurant():
                             tr_date_count += 1
                             if tr_date_count == tr_count:
                                 tds_date = tr_date.find_all('td')
-                                for menu in re.split('.(?=[ⓐ-ⓙ])', tds_date[2].text.replace('\n','')):
+
+                                first_br = re.split('.(?=[ⓐ-ⓙ])', tds_date[2].text.replace('\n', ''))
+                                second_br = re.compile('.(?=[ⓐ-ⓙ])').findall(tds_date[2].text.replace('\n', ''))
+                                second_br.append('')
+                                third_br = [first_br[i] + second_br[i].replace('/','') for i in range(len(first_br))]
+
+                                for menu in third_br:
                                     if not menu == ' ':
                                         if menu[0] == 'ⓐ' or menu[0] == 'ⓑ' or menu[0] == 'ⓒ' or menu[0] == 'ⓓ' or menu[0] == 'ⓔ' or menu[0] == 'ⓕ' or menu[0] == 'ⓖ' or menu[0] == 'ⓗ' or menu[0] == 'ⓘ' or menu[0] == 'ⓙ':
-                                            meal_handler(type=type_handler['조식'], meal_name=menu[1:],
+                                            meal_handler(type=type_handler['조식'], meal_name=menu[1:].replace(' ',''),
                                                          price=price_handler[menu[0]], date=date,
                                                          restaurant_name=current_restaurant)
                                         else:
-                                            meal_handler(type=type_handler['조식'], meal_name=menu, price='etc', date=date, restaurant_name=current_restaurant)
-                                for menu in re.split('.(?=[ⓐ-ⓙ])', tds_date[4].text.replace('\n','')):
+                                            meal_handler(type=type_handler['조식'], meal_name=menu.replace(' ',''), price='etc', date=date, restaurant_name=current_restaurant)
+
+                                first_lu = re.split('.(?=[ⓐ-ⓙ])', tds_date[4].text.replace('\n', ''))
+                                second_lu = re.compile('.(?=[ⓐ-ⓙ])').findall(tds_date[4].text.replace('\n', ''))
+                                second_lu.append('')
+                                third_lu = [first_lu[i] + second_lu[i].replace('/','') for i in range(len(first_lu))]
+
+                                for menu in third_lu:
                                     if not menu == ' ':
                                         if menu[0] == 'ⓐ' or menu[0] == 'ⓑ' or menu[0] == 'ⓒ' or menu[0] == 'ⓓ' or menu[0] == 'ⓔ' or menu[0] == 'ⓕ' or menu[0] == 'ⓖ' or menu[0] == 'ⓗ' or menu[0] == 'ⓘ' or menu[0] == 'ⓙ':
-                                            meal_handler(type=type_handler['중식'], meal_name=menu[1:],
+                                            meal_handler(type=type_handler['중식'], meal_name=menu[1:].replace(' ',''),
                                                          price=price_handler[menu[0]], date=date,
                                                          restaurant_name=current_restaurant)
                                         else:
-                                            meal_handler(type=type_handler['중식'], meal_name=menu, price='etc', date=date, restaurant_name=current_restaurant)
-                                for menu in re.split('.(?=[ⓐ-ⓙ])', tds_date[6].text.replace('\n','')):
+                                            meal_handler(type=type_handler['중식'], meal_name=menu.replace(' ',''), price='etc', date=date, restaurant_name=current_restaurant)
+
+                                first_dn = re.split('.(?=[ⓐ-ⓙ])', tds_date[6].text.replace('\n', ''))
+                                second_dn = re.compile('.(?=[ⓐ-ⓙ])').findall(tds_date[6].text.replace('\n', ''))
+                                second_dn.append('')
+                                third_dn = [first_dn[i] + second_dn[i].replace('/', '') for i in range(len(first_dn))]
+
+                                for menu in third_dn:
                                     if not menu == ' ':
                                         if menu[0] == 'ⓐ' or menu[0] == 'ⓑ' or menu[0] == 'ⓒ' or menu[0] == 'ⓓ' or menu[0] == 'ⓔ' or menu[0] == 'ⓕ' or menu[0] == 'ⓖ' or menu[0] == 'ⓗ' or menu[0] == 'ⓘ' or menu[0] == 'ⓙ':
-                                            meal_handler(type=type_handler['석식'], meal_name=menu[1:],
+                                            meal_handler(type=type_handler['석식'], meal_name=menu[1:].replace(' ',''),
                                                          price=price_handler[menu[0]], date=date,
                                                          restaurant_name=current_restaurant)
                                         else:
-                                            meal_handler(type=type_handler['석식'], meal_name=menu, price='etc', date=date, restaurant_name=current_restaurant)
+                                            meal_handler(type=type_handler['석식'], meal_name=menu.replace(' ',''), price='etc', date=date, restaurant_name=current_restaurant)
 
