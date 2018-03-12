@@ -5,6 +5,8 @@ from rest_framework.decorators import api_view, parser_classes
 from rest_framework import generics, status
 from rest_framework.response import Response
 from .settings import RESTAURANTS
+from meals.models import Restaurant, Menu
+from meals.serializers import MenuSerializer
 
 @api_view(['GET'])
 def menu(request):
