@@ -1,5 +1,3 @@
-# 감골식당 크롤링 다시 구현해야 함.
-
 import requests
 from bs4 import BeautifulSoup
 import re
@@ -122,7 +120,6 @@ def crawl_graduate_dorm_restaurant():
             break
 
 def crawl_snuco_direct_restaurant():
-    #채식메뉴랑 (#) & / (보충설명) 보완
 
     headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0'}
 
@@ -212,10 +209,12 @@ def crawl_snuco_commission_restaurant():
         trs = soup.find_all('tr')
         tr_count = 0
 
+        table_first_row = 21
+        table_last_row = 30
         for tr in trs:
             tr_count += 1
-            if tr_count >= 21 and tr_count <= 30:
-                if tr_count == 29:
+            if tr_count >= table_first_row and tr_count <= table_last_row:
+                if tr_count == 29: #라운지오 넘김
                     continue
                 current_restaurant = restaurant_handler[tr_count - 20]
 
