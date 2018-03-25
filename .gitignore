@@ -1,2 +1,7 @@
 *.pyc
 db.sqlite3
+.idea/workspace.xml
+.idea/collgemeals.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.cml
