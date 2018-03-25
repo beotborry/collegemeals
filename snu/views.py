@@ -14,11 +14,13 @@ def menu(request):
     tomorrow = (timezone.localtime(timezone.now()).today() + timedelta(days=1)).date()
     menu_data = { "today": { "date": today.__str__(), "menus": [] }, "tomorrow": { "date": tomorrow.__str__(), "menus": [] } }
     for restaurant_name in RESTAURANTS:
-        restaurant = Restaurant.objects.get(name=restaurant_name)
-        today_menu = Menu.objects.get(restaurant=restaurant, date=today)
-        menu_data["today"]["menus"].append(MenuSerializer(today_menu).data)
-        tomorrow_menu = Menu.objects.get(restaurant=restaurant, date=tomorrow)
-        menu_data["tomorrow"]["menus"].append(MenuSerializer(tomorrow_menu).data)
+        restaurant = Restaurant.objects.filter(name=restaurant_name).first()
+        today_menu = Menu.objects.filter(restaurant=restaurant, date=today).first()
+        if today_menu:
+            menu_data["today"]["menus"].append(MenuSerializer(today_menu).data)
+        tomorrow_menu = Menu.objects.filter(restaurant=restaurant, date=tomorrow).first()
+        if tomorrow_menu:
+            menu_data["tomorrow"]["menus"].append(MenuSerializer(tomorrow_menu).data)
     return Response(data=menu_data)
 
 @api_view(['POST'])
